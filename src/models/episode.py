@@ -9,7 +9,7 @@ class Episode(db.Model):
     episode = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     
-    # Relacionamentos
+    # Relationships
     characters = db.relationship('Character', secondary='character_episodes',
                                 back_populates='episodes')
     

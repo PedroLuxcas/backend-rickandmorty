@@ -7,7 +7,7 @@ class CharacterEpisode(db.Model):
     episode_id = db.Column(db.Integer, db.ForeignKey('episodes.id'), primary_key=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     
-    # Relacionamentos
+    # Relationships
     character = db.relationship('Character', backref=db.backref('episode_links', cascade='all, delete-orphan'))
     episode = db.relationship('Episode', backref=db.backref('character_links', cascade='all, delete-orphan'))
     

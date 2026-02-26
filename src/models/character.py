@@ -16,7 +16,7 @@ class Character(db.Model):
     location = db.Column(db.JSON)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     
-    # Relacionamentos
+    # Relationships
     episodes = db.relationship('Episode', secondary='character_episodes',
                               back_populates='characters')
     

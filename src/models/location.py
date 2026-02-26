@@ -9,7 +9,7 @@ class Location(db.Model):
     dimension = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     
-    # Relacionamentos
+    # Relationships
     characters_origin = db.relationship('Character', 
                                        foreign_keys='Character.origin_id',
                                        backref='origin_location',
