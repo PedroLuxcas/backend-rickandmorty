@@ -1,18 +1,11 @@
-from flask import Flask, jsonify
-from src.models import db
-from config.settings import DATABASE_URI
+import os
+from app import create_app
 
-app = Flask(__name__)
-app.config('SQLALCHEMY_DATABASE_URI') = DATABASE_URI
-app.config('SQLALCHEMY_TRACK_MODIFICATIONS') = False
+config_name = os.getenv('FLASK_ENV', 'development')
+app = create_app(config_name)
 
-db.init_app(app)
-
-@app.route("/")
-def hello_world():
-    return jsonify({
-        "hello" : "world"
-    })
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 5000))
+    print(f"\n🚀 Server running at http://localhost:{port}")
+    print(f"📡 Environment: {config_name}")
+    app.run(host='0.0.0.0', port=port, debug=(config_name == 'development'))
