@@ -90,8 +90,8 @@ backend/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/PedroLuxcas/rick-and-morty-api.git
-cd rick-and-morty-api/backend
+git clone https://github.com/PedroLuxcas/backend-rickandmorty.git
+cd backend/rickandmorty
 ```
 
 2. **Create and activate virtual environment**
