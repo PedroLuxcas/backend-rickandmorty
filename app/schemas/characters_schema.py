@@ -3,6 +3,8 @@ from .location_schema import LocationSchema
 from .episode_schema import EpisodeSchema
 
 class CharacterSchema(Schema):
+    """Schema for serializing Character objects"""
+    
     id = fields.Int()
     name = fields.Str()
     status = fields.Str()
@@ -10,10 +12,11 @@ class CharacterSchema(Schema):
     type = fields.Str()
     gender = fields.Str()
     image = fields.Str()
+    
     origin = fields.Nested(LocationSchema, attribute='origin_location')
     current_location = fields.Nested(LocationSchema, attribute='current_location')
+    
     last_episode = fields.Method("get_last_episode")
-    total_episodes = fields.Method("get_total_episodes")
     
     def get_last_episode(self, obj):
         if obj.episodes:
@@ -21,8 +24,6 @@ class CharacterSchema(Schema):
             return EpisodeSchema().dump(last)
         return None
     
-    def get_total_episodes(self, obj):
-        return len(obj.episodes)
-
+# ⭐ THESE ARE THE INSTANCES YOU NEED TO IMPORT
 character_schema = CharacterSchema()
 characters_schema = CharacterSchema(many=True)

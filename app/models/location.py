@@ -1,6 +1,7 @@
 from .. import db
 
 class Location(db.Model):
+    """Location model representing places in the Rick and Morty universe"""
     __tablename__ = 'locations'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +10,7 @@ class Location(db.Model):
     dimension = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     
+    # Relationships
     characters_origin = db.relationship('Character', 
                                        foreign_keys='Character.origin_id',
                                        back_populates='origin_location',
@@ -19,11 +21,26 @@ class Location(db.Model):
                                         back_populates='current_location',
                                         lazy='dynamic')
     
+    @property
     def residents_count(self):
-        """Returns total number of residents (original + current, without duplicates)"""
-        origin_ids = {c.id for c in self.characters_origin.all()}
-        current_ids = {c.id for c in self.characters_current.all()}
-        return len(origin_ids | current_ids)  # Union of sets
+        """
+        Returns the number of CURRENT residents in this location.
+        (characters with location_id = this location)
+        """
+        return self.characters_current.count()
     
-    def __repr__(self):
-        return f'<Location {self.id}: {self.name}>'
+    @property
+    def origin_count(self):
+        """
+        Returns the number of characters that have this location as their ORIGIN.
+        """
+        return self.characters_origin.count()
+    
+    def to_dict(self):
+        """Basic location representation without relationships"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'type': self.type,
+            'dimension': self.dimension
+        }
