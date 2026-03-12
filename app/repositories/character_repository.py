@@ -47,3 +47,16 @@ class CharacterRepository:
             db.session.commit()
             return True
         return False
+    
+    def search_by_name(name: str, page: int = 1, per_page: int = 20):
+        """
+        Search characters by name with pagination
+        Uses ilike for case-insensitive search
+        """
+        return Character.query.filter(
+            Character.name.ilike(f'%{name}%')
+        ).order_by(Character.id).paginate(
+            page=page,
+            per_page=per_page,
+            error_out=False
+        )

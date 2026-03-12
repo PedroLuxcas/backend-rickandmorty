@@ -133,3 +133,28 @@ class CharacterController:
             data=result,
             message="Character deleted successfully"
         )
+    
+    def search_characters(self):
+        """
+        GET /api/characters/search?name=rick&page=1&per_page=20
+        Search characters by name with pagination
+        """
+        # Get query parameters
+        name = request.args.get('name', '')
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 20, type=int)
+        
+        # Validate
+        if not name:
+            return ApiResponse.error(
+                message="Name parameter is required",
+                status_code=400
+            )
+        
+        # Call service
+        result = CharacterService.search_characters(name, page, per_page)
+        
+        return ApiResponse.success(
+            data=result,
+            message=f"Characters matching '{name}' retrieved successfully"
+        )

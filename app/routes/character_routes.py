@@ -3,7 +3,7 @@ Character Routes
 Defines URL endpoints for character-related operations.
 """
 
-from flask import Blueprint
+from flask import Blueprint, request  # ← IMPORT request
 from app.controllers import CharacterController
 
 # Create blueprint for character endpoints
@@ -23,6 +23,12 @@ def get_all_characters():
 def get_character_by_id(character_id):
     """GET /api/characters/<id> - Get character by ID"""
     return character_controller.get_character_by_id(character_id)
+
+# ⭐ NOVA ROTA DE SEARCH
+@character_bp.route('/search', methods=['GET'])
+def search_characters():
+    """GET /api/characters/search?name=rick&page=1 - Search characters by name"""
+    return character_controller.search_characters()
 
 # ============ POST ROUTES ============
 

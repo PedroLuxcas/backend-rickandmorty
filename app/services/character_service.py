@@ -147,3 +147,21 @@ class CharacterService:
         except SQLAlchemyError as e:
             raise DatabaseError(f"Failed to delete character {character_id}", 
                               detail=str(e))
+        
+    def search_characters(name: str, page: int = 1, per_page: int = 20):
+        """
+        Search characters by name with pagination
+        """
+        # Get paginated results from repository
+        pagination = CharacterRepository.search_by_name(name, page, per_page)
+        
+        # Serialize with Marshmallow
+        return {
+            'items': characters_schema.dump(pagination.items),
+            'total': pagination.total,
+            'page': pagination.page,
+            'pages': pagination.pages,
+            'per_page': pagination.per_page,
+            'has_next': pagination.has_next,
+            'has_prev': pagination.has_prev
+        }
