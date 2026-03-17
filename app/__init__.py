@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from config import config_by_name
+import os
 
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -13,10 +14,15 @@ def create_app(config_name='default'):
     # Configuration
     app.config.from_object(config_by_name[config_name])
     
-    # ⭐ CONFIGURAÇÃO CORS MAIS ESPECÍFICA
+    frontend_urls = [
+        "http://localhost:3000", 
+        "http://localhost:5173",
+        "https://frontend-rickandmorty.vercel.app/" 
+    ]
+    
     CORS(app, resources={
-        r"/api/*": {  # Aplica apenas para rotas /api/*
-            "origins": ["http://localhost:3000", "http://localhost:5173"],  # Frontend URLs
+        r"/api/*": {
+            "origins": frontend_urls,
             "methods": ["GET", "POST", "PUT", "DELETE"],
             "allow_headers": ["Content-Type"]
         }
@@ -30,9 +36,12 @@ def create_app(config_name='default'):
     from app.routes import character_bp
     app.register_blueprint(character_bp)
     
-    # Create tables (development only)
-    with app.app_context():
-        db.create_all()
-        print("✅ Database synchronized")
+    # ⭐ Create tables ONLY in development
+    if app.config.get('DEBUG', False):
+        with app.app_context():
+            db.create_all()
+            print("✅ Database synchronized (development only)")
+    else:
+        print("🏭 Production mode - tables must be created manually or via migrations")
     
     return app
