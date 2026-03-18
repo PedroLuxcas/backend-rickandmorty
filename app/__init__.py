@@ -14,17 +14,18 @@ def create_app(config_name='default'):
     # Configuration
     app.config.from_object(config_by_name[config_name])
     
+    # ⭐ URLs do frontend (SEM barra no final)
     frontend_urls = [
         "http://localhost:3000", 
         "http://localhost:5173",
-        "https://frontend-rickandmorty.vercel.app/" 
+        "https://frontend-rickandmorty.vercel.app" 
     ]
     
     CORS(app, resources={
         r"/api/*": {
             "origins": frontend_urls,
-            "methods": ["GET", "POST", "PUT", "DELETE"],
-            "allow_headers": ["Content-Type"]
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+            "allow_headers": ["Content-Type", "Authorization"]
         }
     })
     
@@ -36,7 +37,7 @@ def create_app(config_name='default'):
     from app.routes import character_bp
     app.register_blueprint(character_bp)
     
-    # ⭐ Create tables ONLY in development
+    # Create tables ONLY in development
     if app.config.get('DEBUG', False):
         with app.app_context():
             db.create_all()
