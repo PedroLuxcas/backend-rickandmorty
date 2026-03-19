@@ -48,6 +48,7 @@ class CharacterRepository:
             return True
         return False
     
+    @staticmethod  # ← ADICIONE ESTA LINHA
     def search_by_name(name: str, page: int = 1, per_page: int = 20):
         """
         Search characters by name with pagination
