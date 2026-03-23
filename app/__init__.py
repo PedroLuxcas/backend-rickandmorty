@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
@@ -14,16 +14,13 @@ def create_app(config_name='default'):
     # Configuration
     app.config.from_object(config_by_name[config_name])
     
-    frontend_urls = [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "https://frontend-rickandmorty.vercel.app",
-        "http://frontend-rickandmorty.vercel.app"
-    ]
+    #  CORS: Libera tudo (para teste)
+    CORS(app, origins="*", supports_credentials=True)
     
-    # Configuração simplificada e mais permissiva
-    CORS(app, origins=frontend_urls, supports_credentials=True)
-    
+    #  Rota de teste para verificar se o backend está online
+    @app.route('/api/health', methods=['GET'])
+    def health():
+        return jsonify({"status": "ok", "message": "API is running"}), 200
     
     # Initialize extensions
     db.init_app(app)
@@ -39,6 +36,6 @@ def create_app(config_name='default'):
             db.create_all()
             print("✅ Database synchronized (development only)")
     else:
-        print("🏭 Production mode - tables must be created manually or via migrations")
+        print("🏭 Production mode")
     
     return app
