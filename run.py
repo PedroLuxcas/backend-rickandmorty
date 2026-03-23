@@ -31,6 +31,13 @@ print("="*60)
 print("✅ APLICAÇÃO INICIALIZADA COM SUCESSO!")
 print("="*60)
 
+with app.app_context():
+    print("\n" + "="*60)
+    print("📋 TODAS AS ROTAS REGISTRADAS:")
+    print("="*60)
+    for rule in app.url_map.iter_rules():
+        print(f"   {rule}")
+
 if __name__ == "__main__":
     port = int(os.getenv('PORT', 5000))
     print(f"🚀 Servidor rodando na porta {port}")

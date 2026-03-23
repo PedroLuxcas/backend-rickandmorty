@@ -148,20 +148,25 @@ class CharacterService:
             raise DatabaseError(f"Failed to delete character {character_id}", 
                               detail=str(e))
         
-    def search_characters(name: str, page: int = 1, per_page: int = 20):
-        """
-        Search characters by name with pagination
-        """
-        # Get paginated results from repository
-        pagination = CharacterRepository.search_by_name(name, page, per_page)
-        
-        # Serialize with Marshmallow
-        return {
-            'items': characters_schema.dump(pagination.items),
-            'total': pagination.total,
-            'page': pagination.page,
-            'pages': pagination.pages,
-            'per_page': pagination.per_page,
-            'has_next': pagination.has_next,
-            'has_prev': pagination.has_prev
-        }
+    def search_characters(self, name: str, page: int = 1, per_page: int = 20):
+    
+            print(f"🟢 PASSO 3: Service search_characters foi chamado!")
+            print(f"   Buscando por: '{name}', página: {page}")
+            
+            # Get paginated results from repository
+            from app.repositories import CharacterRepository
+            from app.schemas.characters_schema import characters_schema
+            
+            pagination = CharacterRepository.search_by_name(name, page, per_page)
+            print(f"   Encontrados: {pagination.total} personagens")
+            
+            # Serialize with Marshmallow
+            return {
+                'items': characters_schema.dump(pagination.items),
+                'total': pagination.total,
+                'page': pagination.page,
+                'pages': pagination.pages,
+                'per_page': pagination.per_page,
+                'has_next': pagination.has_next,   # ← CORRIGIDO: has_next (com underline)
+                'has_prev': pagination.has_prev    # ← CORRIGIDO: has_prev (com underline)
+    }

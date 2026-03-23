@@ -31,14 +31,11 @@ class CharacterController:
         Returns:
             JSON response with paginated or all characters
         """
-        # Get pagination parameters from query string
         page = request.args.get('page', type=int)
         per_page = request.args.get('per_page', 20, type=int)
         
-        # Delegate to service layer
         result = self.service.get_all_characters(page, per_page)
         
-        # Return standardized success response
         return ApiResponse.success(
             data=result,
             message="Characters retrieved successfully"
@@ -55,10 +52,8 @@ class CharacterController:
         Returns:
             JSON response with character details
         """
-        # Delegate to service layer
         result = self.service.get_character_by_id(character_id)
         
-        # Return standardized success response
         return ApiResponse.success(
             data=result,
             message="Character retrieved successfully"
@@ -75,13 +70,10 @@ class CharacterController:
         Returns:
             JSON response with created character
         """
-        # Parse JSON request body
         data = request.get_json()
         
-        # Delegate to service layer
         result = self.service.create_character(data)
         
-        # Return standardized success response with 201 Created
         return ApiResponse.success(
             data=result,
             message="Character created successfully",
@@ -102,13 +94,10 @@ class CharacterController:
         Returns:
             JSON response with updated character
         """
-        # Parse JSON request body
         data = request.get_json()
         
-        # Delegate to service layer
         result = self.service.update_character(character_id, data)
         
-        # Return standardized success response
         return ApiResponse.success(
             data=result,
             message="Character updated successfully"
@@ -125,10 +114,8 @@ class CharacterController:
         Returns:
             JSON response with deletion confirmation
         """
-        # Delegate to service layer
         result = self.service.delete_character(character_id)
         
-        # Return standardized success response
         return ApiResponse.success(
             data=result,
             message="Character deleted successfully"
@@ -139,20 +126,27 @@ class CharacterController:
         GET /api/characters/search?name=rick&page=1&per_page=20
         Search characters by name with pagination
         """
+        print("🟠 PASSO 2: Controller search_characters foi chamado!")
+        
         # Get query parameters
         name = request.args.get('name', '')
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 20, type=int)
         
+        print(f"   Nome recebido: '{name}', página: {page}")
+        
         # Validate
         if not name:
+            print("❌ Nome vazio! Retornando erro 400")
             return ApiResponse.error(
                 message="Name parameter is required",
                 status_code=400
             )
         
         # Call service
-        result = CharacterService.search_characters(name, page, per_page)
+        print("🟡 Chamando service.search_characters...")
+        result = self.service.search_characters(name, page, per_page)
+        print("✅ Service retornou resultado")
         
         return ApiResponse.success(
             data=result,
